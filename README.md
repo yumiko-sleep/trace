@@ -44,6 +44,25 @@
    Key 只保存在手机的系统安全存储里（Android Keystore），不写进代码、不进数据库，
    也不会随备份文件导出。
 
+### 国内用户：直连下载卡住怎么办
+
+大陆网络直连 GitHub 时，常见的症状是页面一直转圈，或者 APK 下载**卡在 0%、速度只有几 KB/s**——
+文件名和体积能正常显示，但数据传不动。这是国内访问 GitHub 的常见问题，**不是安装包有问题**。
+
+办法很简单：给链接套一个国内加速源，**在原始链接前面加上 `https://gh-proxy.com/` 即可**。
+
+```text
+原始链接
+https://github.com/yumiko-sleep/trace/releases/download/v0.2.0/app-release.apk
+
+加速后（复制到手机浏览器打开）
+https://gh-proxy.com/https://github.com/yumiko-sleep/trace/releases/download/v0.2.0/app-release.apk
+```
+
+加速源只是替你转发 GitHub 的文件流，**下载到的 APK 与直链完全一致**
+（同一个文件，可以自己对比 SHA-256 验证）。链接里的 `v0.2.0` 换成你要装的版本号（tag）即可；
+有加速源之后，上面第 1~2 步的流程完全一样。
+
 补充几点：
 
 - **升级**：以后有新版本，去同一个页面下载新 APK 直接覆盖安装即可，数据保留。
