@@ -88,7 +88,7 @@ dart run build_runner build --delete-conflicting-outputs
 
 ```bash
 flutter analyze     # 必须 0 问题（CI 会卡这一步）
-flutter test        # 当前 194 个用例
+flutter test        # 当前 198 个用例
 ```
 
 写 Widget 测试时注意三件事（都踩过）：

@@ -76,7 +76,7 @@ class SettingsPage extends StatelessWidget {
               const _SettingRow(
                 icon: Icons.info_outline_rounded,
                 label: '版本',
-                value: 'v0.2.0',
+                value: 'v0.2.1',
               ),
             ],
           ),

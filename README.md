@@ -53,14 +53,14 @@
 
 ```text
 原始链接
-https://github.com/yumiko-sleep/trace/releases/download/v0.2.0/app-release.apk
+https://github.com/yumiko-sleep/trace/releases/download/v0.2.1/app-release.apk
 
 加速后（复制到手机浏览器打开）
-https://gh-proxy.com/https://github.com/yumiko-sleep/trace/releases/download/v0.2.0/app-release.apk
+https://gh-proxy.com/https://github.com/yumiko-sleep/trace/releases/download/v0.2.1/app-release.apk
 ```
 
 加速源只是替你转发 GitHub 的文件流，**下载到的 APK 与直链完全一致**
-（同一个文件，可以自己对比 SHA-256 验证）。链接里的 `v0.2.0` 换成你要装的版本号（tag）即可；
+（同一个文件，可以自己对比 SHA-256 验证）。链接里的 `v0.2.1` 换成你要装的版本号（tag）即可；
 有加速源之后，上面第 1~2 步的流程完全一样。
 
 补充几点：
@@ -199,6 +199,7 @@ AI 复盘的结构化上下文（任务/目标/日记/数据趋势表格/日志�
 | 7 | AI 复盘（provider 抽象层 + 结构化上下文 + 趋势数字表格 + 三分段报告 + Key 安全存储） | ✅ 完成 |
 | 8 | 动效润色（✅）、深色模式 + 双配色（✅）、孤儿图片清理（✅）、文档与 CI（✅）、正式签名（✅）、数据备份 / 恢复（✅） | ✅ 完成 |
 | 发布 | **v0.2.0**：首个公开 Release —— 源码 + 正式签名 APK + 安装说明 | ✅ 已发布 |
+| 发布 | **v0.2.1**：分段切换交叉淡入 · 弹窗入场时长统一 · 深色模式弹窗与输入框修复 | ✅ 已发布 |
 
 ## 八、隐私与密钥
 

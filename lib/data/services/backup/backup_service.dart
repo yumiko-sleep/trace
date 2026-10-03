@@ -164,7 +164,7 @@ class BackupService {
         _imagesDirectory = imagesDirectory ?? ImageStorage.directory;
 
   /// 跟 pubspec.yaml 的 version 保持一致，写进备份里方便回溯。
-  static const String appVersion = '0.2.0+1';
+  static const String appVersion = '0.2.1+1';
 
   final AppDatabase _db;
   final BackupFileGateway _gateway;
