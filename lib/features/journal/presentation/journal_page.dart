@@ -20,6 +20,7 @@ import 'widgets/journal_summary_card.dart';
 import 'widgets/journal_type_selector.dart';
 import 'widgets/journal_visuals.dart';
 import 'widgets/today_journal_card.dart';
+import '../../../core/theme/app_motion.dart';
 import '../../../core/theme/app_scheme.dart';
 import '../../../core/theme/app_theme.dart';
 
@@ -74,109 +75,125 @@ class JournalPage extends ConsumerWidget {
               ref.read(journalTypeProvider.notifier).state = t,
         ),
         const SizedBox(height: 18),
-        JournalSummaryCard(
-          type: type,
-          stats: stats,
-          todayLogged: todayLog != null,
-          onRecord: () => openLogSheet(log: todayLog),
-        ),
-        const SizedBox(height: 20),
-        TodayJournalCard(
-          type: type,
-          log: todayLog,
-          planTitle: todayLog?.planId == null
-              ? null
-              : planTitles[todayLog!.planId!],
-          onRecord: () => openLogSheet(log: todayLog),
-          onReview: () => showJournalReviewSheet(
-            context,
-            type: type,
-            date: today,
-            initialReview: todayLog?.review ?? '',
-          ),
-        ),
-        const SizedBox(height: 26),
-        SectionHeader(
-          title: type.planTitle,
-          subtitle: plans.isEmpty
-              ? '还没有计划，先定个方向'
-              : '共 ${plans.length} 个 · 点一下编辑，左滑删除',
-          trailing: _AddPlanButton(
-            label: '新建计划',
-            color: color,
-            onTap: () => showJournalPlanSheet(context, type: type),
-          ),
-        ),
-        const SizedBox(height: 12),
-        if (loading)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 40),
-            child: Center(
-              child: SizedBox(
-                width: 26,
-                height: 26,
-                child: CircularProgressIndicator(strokeWidth: 2.4),
+        // 切换「学习 / 训练」时，下面这一整块内容交叉淡入，而不是硬切。
+        // key 只跟类型走：同一类型里记录/计划的增删不触发这个动画。
+        AnimatedSwitcher(
+          duration: AppMotion.medium,
+          switchInCurve: AppMotion.easeOut,
+          switchOutCurve: AppMotion.softInOut,
+          child: Column(
+            key: ValueKey<JournalType>(type),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              JournalSummaryCard(
+                type: type,
+                stats: stats,
+                todayLogged: todayLog != null,
+                onRecord: () => openLogSheet(log: todayLog),
               ),
-            ),
-          )
-        else ...<Widget>[
-          if (plans.isEmpty)
-            JournalEmptyHint(
-              icon: Icons.checklist_rounded,
-              color: color,
-              title: '还没有${type.planTitle}',
-              description: type == JournalType.study
-                  ? '先写一个学习计划（比如「数学一轮复习」），每天记录时就能关联到它，'
-                      '回头看才知道进度走到哪了。'
-                  : '先写一个训练计划（比如「推 / 拉 / 腿 三分化」），每天记录时就能关联到它，'
-                      '下次加多少重量也有据可依。',
-              actionLabel: '新建计划',
-              onAction: () => showJournalPlanSheet(context, type: type),
-            )
-          else
-            for (final JournalPlan plan in plans)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: JournalPlanCard(
-                  plan: plan,
-                  onTap: () =>
-                      showJournalPlanSheet(context, type: type, plan: plan),
-                  onDelete: () => _deletePlan(context, ref, plan),
+              const SizedBox(height: 20),
+              TodayJournalCard(
+                type: type,
+                log: todayLog,
+                planTitle: todayLog?.planId == null
+                    ? null
+                    : planTitles[todayLog!.planId!],
+                onRecord: () => openLogSheet(log: todayLog),
+                onReview: () => showJournalReviewSheet(
+                  context,
+                  type: type,
+                  date: today,
+                  initialReview: todayLog?.review ?? '',
                 ),
               ),
-          const SizedBox(height: 18),
-          SectionHeader(
-            title: '历史记录',
-            subtitle: logs.isEmpty
-                ? '还没有记录'
-                : '共 ${logs.length} 条 · 点一条可以编辑',
-          ),
-          const SizedBox(height: 12),
-          if (logs.isEmpty)
-            JournalEmptyHint(
-              icon: type == JournalType.study
-                  ? Icons.auto_stories_rounded
-                  : Icons.directions_run_rounded,
-              color: color,
-              title: '还没有${type.shortLabel}记录',
-              description: '每天花一分钟写下「今天做了什么 + 花了多久」，'
-                  '再补一句复盘。坚持一周，回头看会很不一样。',
-              actionLabel: '记录今天',
-              onAction: () => openLogSheet(),
-            )
-          else
-            for (final JournalLog log in logs)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: JournalLogCard(
-                  log: log,
-                  planTitle:
-                      log.planId == null ? null : planTitles[log.planId!],
-                  onTap: () => openLogSheet(log: log),
-                  onDelete: () => _deleteLog(context, ref, log),
+              const SizedBox(height: 26),
+              SectionHeader(
+                title: type.planTitle,
+                subtitle: plans.isEmpty
+                    ? '还没有计划，先定个方向'
+                    : '共 ${plans.length} 个 · 点一下编辑，左滑删除',
+                trailing: _AddPlanButton(
+                  label: '新建计划',
+                  color: color,
+                  onTap: () => showJournalPlanSheet(context, type: type),
                 ),
               ),
-        ],
+              const SizedBox(height: 12),
+              if (loading)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 40),
+                  child: Center(
+                    child: SizedBox(
+                      width: 26,
+                      height: 26,
+                      child: CircularProgressIndicator(strokeWidth: 2.4),
+                    ),
+                  ),
+                )
+              else ...<Widget>[
+                if (plans.isEmpty)
+                  JournalEmptyHint(
+                    icon: Icons.checklist_rounded,
+                    color: color,
+                    title: '还没有${type.planTitle}',
+                    description: type == JournalType.study
+                        ? '先写一个学习计划（比如「数学一轮复习」），每天记录时就能关联到它，'
+                            '回头看才知道进度走到哪了。'
+                        : '先写一个训练计划（比如「推 / 拉 / 腿 三分化」），每天记录时就能关联到它，'
+                            '下次加多少重量也有据可依。',
+                    actionLabel: '新建计划',
+                    onAction: () => showJournalPlanSheet(context, type: type),
+                  )
+                else
+                  for (final JournalPlan plan in plans)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: JournalPlanCard(
+                        plan: plan,
+                        onTap: () => showJournalPlanSheet(
+                          context,
+                          type: type,
+                          plan: plan,
+                        ),
+                        onDelete: () => _deletePlan(context, ref, plan),
+                      ),
+                    ),
+                const SizedBox(height: 18),
+                SectionHeader(
+                  title: '历史记录',
+                  subtitle: logs.isEmpty
+                      ? '还没有记录'
+                      : '共 ${logs.length} 条 · 点一条可以编辑',
+                ),
+                const SizedBox(height: 12),
+                if (logs.isEmpty)
+                  JournalEmptyHint(
+                    icon: type == JournalType.study
+                        ? Icons.auto_stories_rounded
+                        : Icons.directions_run_rounded,
+                    color: color,
+                    title: '还没有${type.shortLabel}记录',
+                    description: '每天花一分钟写下「今天做了什么 + 花了多久」，'
+                        '再补一句复盘。坚持一周，回头看会很不一样。',
+                    actionLabel: '记录今天',
+                    onAction: () => openLogSheet(),
+                  )
+                else
+                  for (final JournalLog log in logs)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: JournalLogCard(
+                        log: log,
+                        planTitle:
+                            log.planId == null ? null : planTitles[log.planId!],
+                        onTap: () => openLogSheet(log: log),
+                        onDelete: () => _deleteLog(context, ref, log),
+                      ),
+                    ),
+              ],
+            ],
+          ),
+        ),
         const SizedBox(height: 16),
         const InfoNote(
           text: '日志分两层：计划是长期方向，记录是每天实际做了什么，复盘是回头看哪一步没走对。'

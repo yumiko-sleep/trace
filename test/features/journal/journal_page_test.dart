@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trace/app.dart';
+import 'package:trace/core/theme/app_motion.dart';
 import 'package:trace/core/widgets/diary_media.dart' show PillActionButton;
 import 'package:trace/data/dao/journal_dao.dart';
 import 'package:trace/data/db/app_database.dart';
@@ -195,6 +196,27 @@ void main() {
     expect(find.text('英语精读'), findsNothing);
     expect(find.text('还没有训练计划'), findsOneWidget);
     expect(find.text('1小时10分'), findsWidgets);
+
+    await disposeTree(tester);
+  });
+
+  testWidgets('学习 / 训练 切换时内容交叉淡入（不是硬切）', (WidgetTester tester) async {
+    await openJournalPage(tester);
+
+    expect(find.text('学习计划'), findsWidgets);
+    expect(find.text('训练计划'), findsNothing);
+
+    await tester.tap(find.text('训练'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 60));
+
+    // 交叉淡入进行中：新旧两块的标题同时挂在树上
+    expect(find.text('学习计划'), findsWidgets, reason: '旧内容还在淡出');
+    expect(find.text('训练计划'), findsWidgets, reason: '新内容已经开始淡入');
+
+    await tester.pump(AppMotion.medium + const Duration(milliseconds: 80));
+    expect(find.text('学习计划'), findsNothing, reason: '动画结束后旧内容应被移除');
+    expect(find.text('训练计划'), findsWidgets);
 
     await disposeTree(tester);
   });

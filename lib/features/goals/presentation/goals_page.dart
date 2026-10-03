@@ -12,6 +12,7 @@ import 'widgets/goal_card.dart';
 import 'widgets/goal_category_selector.dart';
 import 'widgets/goal_editor_sheet.dart';
 import 'widgets/goal_summary_card.dart';
+import '../../../core/theme/app_motion.dart';
 import '../../../core/theme/app_scheme.dart';
 import '../../../core/theme/app_theme.dart';
 
@@ -53,44 +54,58 @@ class GoalsPage extends ConsumerWidget {
               ref.read(goalCategoryProvider.notifier).state = c,
         ),
         const SizedBox(height: 18),
-        GoalSummaryCard(category: category, stats: stats),
-        const SizedBox(height: 20),
-        SectionHeader(
-          title: '${category.label}列表',
-          subtitle: goals.isEmpty
-              ? '点右下角「新增目标」开始'
-              : '点卡片可以编辑，左滑删除',
+        // 切换「今日 / 今年 / 人生」时，下面这一整块内容交叉淡入，而不是硬切。
+        // key 只跟分类走：同一个分类里列表的增删不会触发这个动画。
+        AnimatedSwitcher(
+          duration: AppMotion.medium,
+          switchInCurve: AppMotion.easeOut,
+          switchOutCurve: AppMotion.softInOut,
+          child: Column(
+            key: ValueKey<GoalCategory>(category),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              GoalSummaryCard(category: category, stats: stats),
+              const SizedBox(height: 20),
+              SectionHeader(
+                title: '${category.label}列表',
+                subtitle: goals.isEmpty
+                    ? '点右下角「新增目标」开始'
+                    : '点卡片可以编辑，左滑删除',
+              ),
+              const SizedBox(height: 14),
+              if (asyncGoals.isLoading && !asyncGoals.hasValue)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 48),
+                  child: Center(
+                    child: SizedBox(
+                      width: 26,
+                      height: 26,
+                      child: CircularProgressIndicator(strokeWidth: 2.4),
+                    ),
+                  ),
+                )
+              else if (goals.isEmpty)
+                EmptyGoalsView(
+                  category: category,
+                  onAdd: () => showGoalEditor(context),
+                )
+              else
+                for (final Goal goal in goals)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: GoalCard(
+                      goal: goal,
+                      taskStats: taskStats[goal.id],
+                      parentTitle: goal.parentId == null
+                          ? null
+                          : goalTitles[goal.parentId],
+                      onTap: () => showGoalEditor(context, goal: goal),
+                      onDelete: () => _deleteGoal(context, ref, goal),
+                    ),
+                  ),
+            ],
+          ),
         ),
-        const SizedBox(height: 14),
-        if (asyncGoals.isLoading && !asyncGoals.hasValue)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 48),
-            child: Center(
-              child: SizedBox(
-                width: 26,
-                height: 26,
-                child: CircularProgressIndicator(strokeWidth: 2.4),
-              ),
-            ),
-          )
-        else if (goals.isEmpty)
-          EmptyGoalsView(
-            category: category,
-            onAdd: () => showGoalEditor(context),
-          )
-        else
-          for (final Goal goal in goals)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: GoalCard(
-                goal: goal,
-                taskStats: taskStats[goal.id],
-                parentTitle:
-                    goal.parentId == null ? null : goalTitles[goal.parentId],
-                onTap: () => showGoalEditor(context, goal: goal),
-                onDelete: () => _deleteGoal(context, ref, goal),
-              ),
-            ),
       ],
     );
   }

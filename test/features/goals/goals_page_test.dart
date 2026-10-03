@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trace/app.dart';
+import 'package:trace/core/theme/app_motion.dart';
 import 'package:trace/data/dao/goal_dao.dart';
 import 'package:trace/data/db/app_database.dart';
 import 'package:trace/data/models/enums.dart';
@@ -138,6 +139,29 @@ void main() {
 
     await tester.pump(const Duration(seconds: 6));
     await settle(tester);
+    await disposeTree(tester);
+  });
+
+  testWidgets('切换时间尺度时内容交叉淡入（不是硬切）', (WidgetTester tester) async {
+    await repo.add(title: '今年读完 24 本书', category: GoalCategory.thisYear);
+    await openGoalsPage(tester);
+
+    expect(find.text('今日目标列表'), findsWidgets);
+    expect(find.text('今年目标列表'), findsNothing);
+
+    await tester.tap(find.text('今年目标'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 60));
+
+    // 交叉淡入进行中：新旧两块的标题同时挂在树上
+    expect(find.text('今日目标列表'), findsWidgets, reason: '旧内容还在淡出');
+    expect(find.text('今年目标列表'), findsWidgets, reason: '新内容已经开始淡入');
+
+    await tester.pump(AppMotion.medium + const Duration(milliseconds: 80));
+    expect(find.text('今日目标列表'), findsNothing, reason: '动画结束后旧内容应被移除');
+    expect(find.text('今年目标列表'), findsWidgets);
+    expect(find.text('今年读完 24 本书'), findsWidgets);
+
     await disposeTree(tester);
   });
 }
