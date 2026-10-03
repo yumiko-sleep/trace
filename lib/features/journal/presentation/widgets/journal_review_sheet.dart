@@ -19,12 +19,8 @@ Future<void> showJournalReviewSheet(
   required DateTime date,
   String initialReview = '',
 }) {
-  final AppScheme c = context.scheme;
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: c.ink.withValues(alpha: 0.30),
     builder: (BuildContext _) => _JournalReviewSheet(
       type: type,
       date: date,

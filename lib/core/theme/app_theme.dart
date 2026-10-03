@@ -64,6 +64,9 @@ class AppTheme {
       highlightColor: Colors.transparent,
       fontFamily: null,
       dialogTheme: DialogThemeData(backgroundColor: s.surface),
+      // 底部弹窗：Material 3 的 BottomSheetThemeData 没有动画时长字段，
+      // 所以弹窗统一由 core/widgets/sheet_form.dart 里的 showAppSheet() 弹出，
+      // 入场/出场时长只在那里定义一处（AppMotion.sheetStyle）。
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: s.surface,
         surfaceTintColor: Colors.transparent,

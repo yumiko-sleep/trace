@@ -15,12 +15,8 @@ import '../../../../core/theme/app_theme.dart';
 
 /// 打开新建 / 编辑目标的底部弹窗。
 Future<void> showGoalEditor(BuildContext context, {Goal? goal}) {
-  final AppScheme c = context.scheme;
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: c.ink.withValues(alpha: 0.30),
     builder: (BuildContext _) => _GoalEditorSheet(goal: goal),
   );
 }

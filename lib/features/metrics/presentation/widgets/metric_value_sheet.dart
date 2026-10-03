@@ -23,12 +23,8 @@ Future<void> showMetricValueSheet(
   required DateTime day,
   double? current,
 }) {
-  final AppScheme c = context.scheme;
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: c.ink.withValues(alpha: 0.30),
     builder: (BuildContext _) =>
         _MetricValueSheet(def: def, day: day, current: current),
   );

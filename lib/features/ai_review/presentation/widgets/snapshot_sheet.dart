@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/widgets/bounce_tap.dart';
+import '../../../../core/widgets/sheet_form.dart';
 import '../../../../core/theme/app_scheme.dart';
 import '../../../../core/theme/app_theme.dart';
 
@@ -13,12 +14,9 @@ Future<void> showAiSnapshotSheet(
   required String json,
   String subtitle = '',
 }) {
-  final AppScheme c = context.scheme;
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: c.ink.withValues(alpha: 0.35),
+    barrierAlpha: 0.35,
     builder: (BuildContext _) =>
         _SnapshotSheet(json: json, subtitle: subtitle),
   );

@@ -11,6 +11,28 @@ import 'bounce_tap.dart';
 /// 所有弹窗都用这一套，保证观感、动效与配色完全一致。
 /// ============================================================
 
+/// 统一的底部弹窗入口。
+///
+/// **所有弹窗都从这里弹**，不要在页面里直接调 `showModalBottomSheet`：
+/// 入场 / 出场时长只在 [AppMotion.sheetStyle] 里定义了一份
+/// （`AppMotion.sheet` / `AppMotion.sheetOut`），
+/// 「背景透明、点遮罩关闭、能弹键盘」这些行为也一并统一了。
+Future<T?> showAppSheet<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  // 遮罩深浅：默认 0.30，内容偏满屏的弹窗（如 AI 复盘详情）用 0.35 压暗一点。
+  double barrierAlpha = 0.30,
+}) {
+  return showModalBottomSheet<T>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: context.scheme.ink.withValues(alpha: barrierAlpha),
+    sheetAnimationStyle: AppMotion.sheetStyle,
+    builder: builder,
+  );
+}
+
 /// 小节标题。
 class SheetLabel extends StatelessWidget {
   const SheetLabel(this.text, {super.key});

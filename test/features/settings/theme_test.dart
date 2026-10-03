@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:trace/app.dart';
+import 'package:trace/core/theme/app_motion.dart';
 import 'package:trace/core/theme/app_scheme.dart';
 import 'package:trace/data/dao/settings_dao.dart';
 import 'package:trace/data/db/app_database.dart';
 import 'package:trace/data/providers/data_providers.dart';
 import 'package:trace/data/repositories/settings_repository.dart';
+import 'package:trace/features/home/presentation/widgets/section_tile.dart';
 import 'package:trace/features/settings/providers/theme_providers.dart';
 
 void main() {
@@ -160,6 +162,49 @@ void main() {
       findsOneWidget,
     );
     expect(await SettingsRepository(SettingsDao(db)).themeModeId, 'dark');
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 1));
+  });
+
+  testWidgets('底部弹窗的入场/出场时长统一走 AppMotion', (WidgetTester tester) async {
+    final AppDatabase db = AppDatabase.memory();
+    addTearDown(db.close);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: <Override>[appDatabaseProvider.overrideWithValue(db)],
+        child: const TraceApp(),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 1));
+
+    // 主页 → 目标 → 打开「新增目标」弹窗
+    await tester.tap(find.byType(SectionTile).at(1));
+    for (int i = 0; i < 12; i++) {
+      await tester.pump(const Duration(milliseconds: 120));
+    }
+    await tester.tap(find.text('新增目标'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // 入场刚开始：弹窗还没滑到位
+    final double midway = tester.getTopLeft(find.text('新建目标')).dy;
+
+    await tester.pump(AppMotion.sheet + const Duration(milliseconds: 60));
+    final double settled = tester.getTopLeft(find.text('新建目标')).dy;
+    expect(settled, lessThan(midway), reason: '弹窗应该从下往上滑入');
+
+    // 路由上挂的就是全局统一的那份时长
+    final ModalRoute<Object?>? route =
+        ModalRoute.of(tester.element(find.text('新建目标')));
+    expect(route, isA<ModalBottomSheetRoute<void>>());
+    final ModalBottomSheetRoute<void> sheet =
+        route! as ModalBottomSheetRoute<void>;
+    expect(sheet.sheetAnimationStyle?.duration, AppMotion.sheet);
+    expect(sheet.sheetAnimationStyle?.reverseDuration, AppMotion.sheetOut);
+    expect(AppMotion.sheetStyle.duration, AppMotion.sheet);
+    expect(AppMotion.sheetStyle.reverseDuration, AppMotion.sheetOut);
 
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 1));

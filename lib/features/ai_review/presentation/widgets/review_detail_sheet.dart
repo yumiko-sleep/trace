@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/day_utils.dart';
 import '../../../../core/widgets/bounce_tap.dart';
+import '../../../../core/widgets/sheet_form.dart';
 import '../../../../data/db/app_database.dart';
 import '../../../../data/models/enums.dart';
 import '../../domain/ai_review_report.dart';
@@ -15,12 +16,9 @@ Future<void> showReviewDetailSheet(
   BuildContext context, {
   required AiReview review,
 }) {
-  final AppScheme c = context.scheme;
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: c.ink.withValues(alpha: 0.35),
+    barrierAlpha: 0.35,
     builder: (BuildContext _) => _ReviewDetailSheet(review: review),
   );
 }

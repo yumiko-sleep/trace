@@ -31,12 +31,8 @@ Future<void> showMetricEditorSheet(
 
 /// 数据项管理：列表 + 新增入口。
 Future<void> showMetricManageSheet(BuildContext context) {
-  final AppScheme c = context.scheme;
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: c.ink.withValues(alpha: 0.30),
     builder: (BuildContext _) => const _MetricManageSheet(),
   );
 }

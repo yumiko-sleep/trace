@@ -21,12 +21,8 @@ Future<void> showJournalLogSheet(
   required DateTime date,
   JournalLog? log,
 }) {
-  final AppScheme c = context.scheme;
-  return showModalBottomSheet<void>(
+  return showAppSheet<void>(
     context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    barrierColor: c.ink.withValues(alpha: 0.30),
     builder: (BuildContext _) =>
         _JournalLogSheet(type: type, date: date, log: log),
   );
