@@ -149,6 +149,13 @@ class AppScheme {
   /// 卡片上的柔和阴影色
   Color get shadow => ink.withValues(alpha: isDark ? 0.22 : 0.05);
 
+  /// 输入框 / 输入型控件（下拉行、胶囊、选择器）的填充色。
+  ///
+  /// 浅色下是淡淡的蓝灰；深色下 [bgBottom] 跟 [surface] 几乎一样（#121B25 vs #141C24），
+  /// 直接用会让输入框"消失"，所以深色走 [card]（比表面略亮一档）。
+  /// 所有输入框的底色都从这里取，不要再手写 bgBottom + alpha。
+  Color get fieldFill => isDark ? card : bgBottom.withValues(alpha: 0.7);
+
   /// 大面积渐变块下方那层彩色投影
   Color glow(Color color) => color.withValues(alpha: isDark ? 0.26 : 0.32);
 

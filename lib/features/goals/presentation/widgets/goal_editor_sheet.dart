@@ -163,9 +163,9 @@ class _GoalEditorSheetState extends ConsumerState<_GoalEditorSheet> {
       child: RepaintBoundary(
         child: Container(
           constraints: BoxConstraints(maxHeight: maxHeight),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: SafeArea(
             top: false,
@@ -347,9 +347,7 @@ class _GoalEditorSheetState extends ConsumerState<_GoalEditorSheet> {
                                     vertical: 13,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: c.bgBottom.withValues(
-                                      alpha: 0.7,
-                                    ),
+                                    color: c.fieldFill,
                                     borderRadius: BorderRadius.circular(14),
                                     border: Border.all(color: c.line),
                                   ),
@@ -390,9 +388,7 @@ class _GoalEditorSheetState extends ConsumerState<_GoalEditorSheet> {
                                   width: 44,
                                   height: 44,
                                   decoration: BoxDecoration(
-                                    color: c.bgBottom.withValues(
-                                      alpha: 0.7,
-                                    ),
+                                    color: c.fieldFill,
                                     borderRadius: BorderRadius.circular(14),
                                     border: Border.all(color: c.line),
                                   ),

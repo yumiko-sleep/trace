@@ -26,7 +26,9 @@ Future<T?> showAppSheet<T>({
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
+    // 底色交给路由自己的 Material：这样键盘弹起时，弹窗下方那段（键盘占位）
+    // 也是弹窗自己的底色，不会在弹窗和键盘之间露出一条"黑边"。
+    backgroundColor: context.scheme.surface,
     barrierColor: context.scheme.ink.withValues(alpha: barrierAlpha),
     sheetAnimationStyle: AppMotion.sheetStyle,
     builder: builder,
@@ -82,7 +84,7 @@ class SheetField extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       decoration: BoxDecoration(
-        color: c.bgBottom.withValues(alpha: c.isDark ? 0.55 : 0.7),
+        color: c.fieldFill,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: errorText == null
@@ -107,7 +109,7 @@ class SheetField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(
-            color: c.inkFaint,
+            color: c.isDark ? c.inkSoft : c.inkFaint,
             fontWeight: FontWeight.w400,
           ),
           errorText: errorText,
@@ -155,7 +157,7 @@ class SheetChoice extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? color.withValues(alpha: c.isDark ? 0.20 : 0.12)
-              : c.bgBottom.withValues(alpha: c.isDark ? 0.55 : 0.7),
+              : c.fieldFill,
           borderRadius: BorderRadius.circular(dense ? 999 : 14),
           border: Border.all(
             color: selected ? color.withValues(alpha: 0.55) : c.line,

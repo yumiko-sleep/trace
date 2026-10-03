@@ -97,7 +97,7 @@ class _MoodChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? color.withValues(alpha: 0.16)
-              : Colors.white.withValues(alpha: 0.85),
+              : c.fieldFill,
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
             color: selected ? color.withValues(alpha: 0.55) : c.line,

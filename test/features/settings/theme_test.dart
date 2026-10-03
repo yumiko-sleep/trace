@@ -209,4 +209,65 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(seconds: 1));
   });
+
+  testWidgets('深色模式：弹窗底色与输入框填充都跟随调色板', (WidgetTester tester) async {
+    final AppDatabase db = AppDatabase.memory();
+    addTearDown(db.close);
+
+    // 先把主题设成深色 + 樱花粉
+    final SettingsRepository settings = SettingsRepository(SettingsDao(db));
+    await settings.setThemeModeId('dark');
+    await settings.setColorFamilyId('sakura');
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: <Override>[appDatabaseProvider.overrideWithValue(db)],
+        child: const TraceApp(),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 1));
+
+    // 主页 → 今日任务 → 打开「新增任务」弹窗
+    await tester.tap(find.byType(SectionTile).first);
+    for (int i = 0; i < 12; i++) {
+      await tester.pump(const Duration(milliseconds: 120));
+    }
+    await tester.ensureVisible(find.text('新增任务'));
+    await tester.tap(find.text('新增任务'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    const AppScheme dark = AppScheme.sakuraDark;
+
+    Finder containersWith(Color color) => find.byWidgetPredicate(
+          (Widget w) =>
+              w is Container &&
+              w.decoration is BoxDecoration &&
+              (w.decoration! as BoxDecoration).color == color,
+        );
+
+    // 1) 弹窗主体底色 = 调色板的 surface（以前是硬编码白色）
+    expect(
+      containersWith(dark.surface),
+      findsWidgets,
+      reason: '弹窗底色应该用调色板的 surface',
+    );
+
+    // 2) 输入框 / 输入型控件的填充 = fieldFill（深色下走 card 档）
+    expect(
+      containersWith(dark.fieldFill),
+      findsWidgets,
+      reason: '输入框填充要跟随深色调色板',
+    );
+
+    // 3) 深色模式下不该再出现硬编码白底的容器
+    expect(
+      containersWith(Colors.white),
+      findsNothing,
+      reason: '深色模式下不应再有硬编码白底',
+    );
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 1));
+  });
 }

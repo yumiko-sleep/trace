@@ -260,7 +260,7 @@ class _DiaryEditorPageState extends ConsumerState<DiaryEditorPage> {
               width: 38,
               height: 38,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.85),
+                color: c.fieldFill,
                 shape: BoxShape.circle,
                 border: Border.all(color: c.line),
               ),
@@ -380,7 +380,7 @@ class _DiaryEditorPageState extends ConsumerState<DiaryEditorPage> {
         decoration: InputDecoration(
           hintText: '今天发生了什么？想记住什么？\n\n不用写很多，一句话也可以。',
           hintStyle: TextStyle(
-            color: c.inkFaint,
+            color: c.isDark ? c.inkSoft : c.inkFaint,
             fontSize: 14,
             height: 1.7,
           ),

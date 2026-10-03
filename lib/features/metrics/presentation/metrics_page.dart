@@ -224,7 +224,7 @@ class MetricSelector extends StatelessWidget {
               decoration: BoxDecoration(
                 color: active
                     ? color.withValues(alpha: 0.14)
-                    : Colors.white.withValues(alpha: 0.86),
+                    : c.fieldFill,
                 borderRadius: BorderRadius.circular(999),
                 border: Border.all(
                   color: active ? color.withValues(alpha: 0.55) : c.line,
@@ -278,7 +278,7 @@ class _RangeSelector extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: c.bgBottom.withValues(alpha: 0.8),
+        color: c.isDark ? c.card : c.bgBottom.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(999),
         border: Border.all(color: c.line),
       ),

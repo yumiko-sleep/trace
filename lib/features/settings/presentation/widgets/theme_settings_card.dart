@@ -183,7 +183,7 @@ class _ModeButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? c.mint.withValues(alpha: c.isDark ? 0.20 : 0.12)
-              : c.bgBottom.withValues(alpha: c.isDark ? 0.55 : 0.7),
+              : c.fieldFill,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: selected ? c.mint.withValues(alpha: 0.55) : c.line,
@@ -239,7 +239,7 @@ class _FamilyOption extends StatelessWidget {
         curve: AppMotion.emphasized,
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
         decoration: BoxDecoration(
-          color: c.bgBottom.withValues(alpha: c.isDark ? 0.55 : 0.7),
+          color: c.fieldFill,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: selected ? c.mint.withValues(alpha: 0.65) : c.line,

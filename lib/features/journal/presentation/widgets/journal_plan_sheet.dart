@@ -112,9 +112,9 @@ class _JournalPlanSheetState extends ConsumerState<_JournalPlanSheet> {
       child: RepaintBoundary(
         child: Container(
           constraints: BoxConstraints(maxHeight: maxHeight),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: SafeArea(
             top: false,

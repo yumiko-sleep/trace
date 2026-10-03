@@ -143,9 +143,9 @@ class _MetricValueSheetState extends ConsumerState<_MetricValueSheet> {
       child: RepaintBoundary(
         child: Container(
           constraints: BoxConstraints(maxHeight: maxHeight),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: SafeArea(
             top: false,
@@ -400,7 +400,7 @@ class _TargetHint extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: c.bgBottom.withValues(alpha: 0.7),
+          color: c.fieldFill,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: c.line),
         ),

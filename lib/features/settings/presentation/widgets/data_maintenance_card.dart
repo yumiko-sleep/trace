@@ -287,7 +287,7 @@ class _ReportBody extends StatelessWidget {
                   height: 46,
                   decoration: BoxDecoration(
                     color: onClean == null
-                        ? c.bgBottom.withValues(alpha: 0.7)
+                        ? c.fieldFill
                         : c.danger.withValues(alpha: 0.10),
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(

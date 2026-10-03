@@ -181,7 +181,7 @@ class _DayStepper extends StatelessWidget {
     final AppScheme c = context.scheme;
     return Container(
       decoration: BoxDecoration(
-        color: c.bgBottom.withValues(alpha: 0.8),
+        color: c.isDark ? c.card : c.bgBottom.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: c.line),
       ),
@@ -263,7 +263,7 @@ class _MetricValueTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: recorded
               ? color.withValues(alpha: 0.07)
-              : c.bgBottom.withValues(alpha: 0.5),
+              : c.isDark ? c.card : c.bgBottom.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: recorded ? color.withValues(alpha: 0.28) : c.line,

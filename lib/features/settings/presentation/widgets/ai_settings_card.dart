@@ -249,7 +249,7 @@ class _AiSettingsCardState extends ConsumerState<AiSettingsCard> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
             decoration: BoxDecoration(
-              color: c.bgBottom.withValues(alpha: 0.7),
+              color: c.fieldFill,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: c.line),
             ),
@@ -270,7 +270,7 @@ class _AiSettingsCardState extends ConsumerState<AiSettingsCard> {
                           ? '已保存（$_maskedKey），填这里可覆盖'
                           : '粘贴你的 API Key',
                       hintStyle: TextStyle(
-                        color: c.inkFaint,
+                        color: c.isDark ? c.inkSoft : c.inkFaint,
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
                       ),
