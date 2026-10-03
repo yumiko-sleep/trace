@@ -1,0 +1,53 @@
+# ---------- Flutter / Dart ----------
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+.idea/
+.vscode/
+*.log
+
+# ---------- Android ----------
+android/.gradle/
+android/local.properties
+android/key.properties
+*.jks
+*.keystore
+*.p12
+*.pem
+# 将来接入 Firebase / 推送时不要提交
+google-services.json
+GoogleService-Info.plist
+
+# ---------- iOS ----------
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Runner/GeneratedPluginRegistrant.*
+ios/Flutter/ephemeral/
+
+# ---------- macOS / Windows ----------
+macos/Flutter/ephemeral/
+windows/flutter/ephemeral/
+
+# ---------- 密钥 / 环境变量（务必不要提交） ----------
+.env
+.env.*
+!.env.example
+*.key
+secrets.*
+local.properties
+
+# ---------- 单元测试用的 sqlite3 原生库（Windows） ----------
+# 体积几 MB 的二进制，不属于源码；本地放好即可，见 README 的「运行测试」
+test/native/*.dll
+sqlite3.dll
+
+# ---------- 编辑器 / 系统 ----------
+.DS_Store
+Thumbs.db
+*.swp
+*~

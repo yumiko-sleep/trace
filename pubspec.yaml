@@ -1,0 +1,71 @@
+name: trace
+description: 轨迹 Trace —— 完全开源的个人成长管理 App（任务 / 目标 / 日记 / 数据 / 日志 + AI 复盘）
+publish_to: "none"
+version: 0.1.0+1
+
+# 作者 / 维护者：yumiko不想睡
+repository: https://github.com/yumiko-sleep/trace
+issue_tracker: https://github.com/yumiko-sleep/trace/issues
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.5.1
+  go_router: ^14.0.0
+
+  # ---------- 本地数据库（阶段 1） ----------
+  drift: ^2.35.0
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # ---------- 日记配图（阶段 4） ----------
+  # pickMultiImage 自带 maxWidth / imageQuality，选图时就完成压缩，无需额外插件
+  image_picker: ^1.1.2
+  fl_chart: ^1.2.0
+  http: ^1.6.0
+  flutter_secure_storage: ^11.2.0
+
+  # ---------- 数据备份 / 恢复（阶段 8⑤） ----------
+  # file_picker 走系统文件选择器（Android 的 SAF），选下载目录即可，
+  # 不需要任何存储权限；archive 是纯 Dart 的 zip 编解码，用来把
+  # data.json 和日记配图打包成一个文件。
+  file_picker: ^13.1.0
+  archive: ^4.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # ---------- 代码生成（Drift） ----------
+  drift_dev: ^2.35.0
+  build_runner: ^2.4.11
+
+  # 单元测试在宿主机（Windows）跑时需要 sqlite3 原生库
+  sqlite3: ^3.5.2
+
+flutter:
+  uses-material-design: true
+
+# ============================================================
+# sqlite3 原生库的下载源
+# ============================================================
+# package:sqlite3 3.x 默认从 GitHub Releases 拉预编译的 SQLite 动态库，
+# 在中国大陆直连 github.com 会超时（单元测试就跑不起来）。
+# 这里按官方文档的 `url_pattern` 机制改走 GitHub 加速镜像：
+# 下载内容与官方完全一致，pub.dev 上的 sha256 校验依然生效。
+#
+# 如果你的网络能直连 GitHub，把下面整段删掉即可（默认就是官方源）。
+# $RELEASE_TAG / $FILENAME 是官方约定的占位符，不要改动。
+hooks:
+  user_defines:
+    sqlite3:
+      url_pattern: "https://gh-proxy.com/https://github.com/simolus3/sqlite3.dart/releases/download/$RELEASE_TAG/$FILENAME"
+

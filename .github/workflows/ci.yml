@@ -1,0 +1,94 @@
+name: CI
+
+# 触发：推到 main、任何 PR、以及手动点一下
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+# 同一个分支上新的推送会取消上一次还在跑的流程
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: 静态分析 + 单元测试
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # 本地开发用的是 Flutter 3.47.6（详见 docs/DEVELOPMENT.md）；
+      # CI 跟随 stable 通道，能第一时间发现新版本带来的破坏性改动。
+      - name: 准备 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter --version
+      - run: flutter pub get
+
+      - name: 静态分析（零容忍：warning / info 也会让 CI 失败）
+        run: flutter analyze
+
+      - name: 单元测试
+        run: flutter test --reporter expanded
+
+  build-apk:
+    name: 构建 Android Release
+    needs: check
+    # 只在打 tag（或手动触发）时构建产物，日常 PR 不浪费构建时间
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 准备 JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: 准备 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      # 可选：在仓库 Secrets 里配好下面 4 个值，CI 就会用正式签名打包；
+      # 不配则退回 debug 签名（产物仅用于自测，不能上架）。
+      #   ANDROID_KEYSTORE_BASE64  —— `base64 -w0 android/app/trace-release.jks`
+      #   ANDROID_KEYSTORE_PASSWORD / ANDROID_KEY_ALIAS / ANDROID_KEY_PASSWORD
+      - name: 配置正式签名（未配置 secrets 时跳过）
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::notice::未配置签名 secrets，本次产物使用 debug 签名"
+            exit 0
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/trace-release.jks
+          {
+            echo "storeFile=trace-release.jks"
+            echo "storePassword=$STORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > android/key.properties
+
+      - name: 构建 APK（arm64）
+        run: flutter build apk --release --target-platform android-arm64
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: trace-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
