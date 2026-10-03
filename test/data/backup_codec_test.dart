@@ -28,7 +28,7 @@ void main() {
   test('dump → restore：10 张表逐行完整往返（含内置数据项）', () async {
     await _seed(source);
 
-    final TraceBackup before = await codec.dump(source, appVersion: '0.1.0+1');
+    final TraceBackup before = await codec.dump(source, appVersion: '0.2.0+1');
     expect(
       before.counts.keys.toSet(),
       BackupTables.ordered.toSet(),
@@ -37,7 +37,7 @@ void main() {
     expect(before.totalRows, greaterThan(0));
 
     await codec.restore(target, before);
-    final TraceBackup after = await codec.dump(target, appVersion: '0.1.0+1');
+    final TraceBackup after = await codec.dump(target, appVersion: '0.2.0+1');
 
     for (final String table in BackupTables.ordered) {
       expect(
@@ -235,12 +235,12 @@ void main() {
 
     test('encode → decode 是自反的', () async {
       await _seed(source);
-      final TraceBackup backup = await codec.dump(source, appVersion: '0.1.0+1');
+      final TraceBackup backup = await codec.dump(source, appVersion: '0.2.0+1');
       final TraceBackup again = TraceBackup.decode(backup.encode());
 
       expect(again.totalRows, backup.totalRows);
       expect(again.imageCount, backup.imageCount);
-      expect(again.appVersion, '0.1.0+1');
+      expect(again.appVersion, '0.2.0+1');
       expect(
         again.exportedAt!.millisecondsSinceEpoch,
         backup.exportedAt!.millisecondsSinceEpoch,

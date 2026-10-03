@@ -67,7 +67,7 @@ PendingBackup _pending() => PendingBackup(
           ],
         },
         exportedAt: DateTime(2026, 10, 3, 16, 24),
-        appVersion: '0.1.0+1',
+        appVersion: '0.2.0+1',
       ),
       archive: Archive(),
     );

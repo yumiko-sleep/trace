@@ -104,6 +104,11 @@ void main() {
     final TraceBackup parsed = TraceBackup.decode(data!.content);
     expect(parsed.rows[BackupTables.diaryEntries], hasLength(1));
     expect(
+      parsed.appVersion,
+      BackupService.appVersion,
+      reason: '备份里要记下导出时的版本号，方便以后回溯',
+    );
+    expect(
       parsed.rows[BackupTables.diaryImages]!.single['path'],
       _imageName,
       reason: '备份里只留文件名',

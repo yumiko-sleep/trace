@@ -1,7 +1,7 @@
 name: trace
 description: 轨迹 Trace —— 完全开源的个人成长管理 App（任务 / 目标 / 日记 / 数据 / 日志 + AI 复盘）
 publish_to: "none"
-version: 0.1.0+1
+version: 0.2.0+1
 
 # 作者 / 维护者：yumiko不想睡
 repository: https://github.com/yumiko-sleep/trace
