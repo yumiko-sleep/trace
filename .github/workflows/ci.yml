@@ -1,9 +1,11 @@
 name: CI
 
-# 触发：推到 main、任何 PR、以及手动点一下
+# 触发：推到 main、任何 PR、打 v* 标签、以及手动点一下
 on:
   push:
     branches: [ main ]
+    # 打 tag 时也要跑：check 通过后由 build-apk 产出 release APK
+    tags: [ 'v*' ]
   pull_request:
   workflow_dispatch:
 
